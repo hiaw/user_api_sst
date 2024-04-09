@@ -19,9 +19,9 @@ export function API({ stack }: StackContext) {
       },
     },
     routes: {
-      "GET /": "packages/functions/src/lambda.handler",
-      "GET /todo": "packages/functions/src/todo.list",
-      "POST /todo": "packages/functions/src/todo.create",
+      "GET /users": "packages/functions/src/user.list",
+      "POST /user": "packages/functions/src/user.create",
+      // "GET /user/{id}": "packages/functions/src/user.get",
     },
   });
 

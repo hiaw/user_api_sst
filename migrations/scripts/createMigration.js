@@ -10,4 +10,4 @@ const sec = String(date.getUTCSeconds()).padStart(2, "0");
 
 const dateString = `${year}${month}${day}${hour}${min}${sec}`;
 
-fs.copyFile("./scripts/blankMigration.ts", `${dateString}_.ts`, () => {});
+fs.copyFile("./scripts/blankMigration.mjs", `${dateString}_.mjs`, () => {});
