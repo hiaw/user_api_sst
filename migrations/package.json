@@ -1,0 +1,14 @@
+{
+  "name": "migrations",
+  "version": "1.0.0",
+  "description": "Folder for migration scripts",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "createMigration": "node ./scripts/createMigration.js"
+  },
+  "dependencies": {
+    "kysely": "^0.27.3"
+  }
+}

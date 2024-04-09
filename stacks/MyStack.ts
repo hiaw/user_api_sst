@@ -1,16 +1,21 @@
-import { StackContext, Api, EventBus } from "sst/constructs";
+import { StackContext, Api, RDS } from "sst/constructs";
 
 export function API({ stack }: StackContext) {
-  const bus = new EventBus(stack, "bus", {
-    defaults: {
-      retries: 10,
+  const db = new RDS(stack, "database", {
+    engine: "postgresql13.9",
+    defaultDatabaseName: "company",
+    migrations: "migrations",
+    scaling: {
+      autoPause: true,
+      minCapacity: "ACU_2",
+      maxCapacity: "ACU_2",
     },
   });
 
   const api = new Api(stack, "api", {
     defaults: {
       function: {
-        bind: [bus],
+        bind: [db],
       },
     },
     routes: {
@@ -18,10 +23,6 @@ export function API({ stack }: StackContext) {
       "GET /todo": "packages/functions/src/todo.list",
       "POST /todo": "packages/functions/src/todo.create",
     },
-  });
-
-  bus.subscribe("todo.created", {
-    handler: "packages/functions/src/events/todo-created.handler",
   });
 
   stack.addOutputs({
