@@ -27,22 +27,6 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0(@types/node@20.12.5)
 
-  packages/core:
-    dependencies:
-      zod:
-        specifier: ^3.22.4
-        version: 3.22.4
-    devDependencies:
-      '@types/node':
-        specifier: ^20.12.5
-        version: 20.12.5
-      sst:
-        specifier: ^2.41.4
-        version: 2.41.4(@aws-sdk/credential-provider-node@3.549.0)
-      vitest:
-        specifier: ^1.4.0
-        version: 1.4.0(@types/node@20.12.5)
-
   packages/functions:
     dependencies:
       '@aws-sdk/client-rds-data':
