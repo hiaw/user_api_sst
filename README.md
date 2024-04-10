@@ -6,7 +6,7 @@ It uses [pnpm](https://pnpm.io/) as the package manager.
 
 ## Evaluation
 
-A live version of this API is available [here](https://cddfki6443.execute-api.us-east-1.amazonaws.com) until end of April 2024.
+A live version of this API is available [here](https://6nadkytg2f.execute-api.us-east-1.amazonaws.com) until end of April 2024.
 
 ## Usage
 
@@ -35,7 +35,7 @@ Install [aws-cli](https://aws.amazon.com/cli/) and ensure [you're logged in](htt
 
 ### Deployment
 
-Running `npx sst dev` will deploy the development version on your AWS account. The `dev` version assume low resource requirement for RDS PostgreSQL. The `minCapacity` in `stack/MyStack.ts` can be adjusted for production use.
+The project assume low resource requirement for RDS PostgreSQL. The `minCapacity` in `stack/MyStack.ts` can be adjusted for higher requirement.
 
 `npx sst deploy`
 
