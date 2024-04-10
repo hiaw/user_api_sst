@@ -22,8 +22,8 @@ export function API({ stack }: StackContext) {
       "POST /user": "packages/functions/src/handler.create",
       "GET /users": "packages/functions/src/handler.list",
       "GET /user/{id}": "packages/functions/src/handler.get",
-      "GET /user/last-name/{lastname}":
-        "packages/functions/src/handler.findByLastName",
+      "GET /users/with_last_name/{last_name}":
+        "packages/functions/src/handler.withLastName",
     },
   });
 

@@ -55,7 +55,7 @@ export const create: APIGatewayProxyHandlerV2 = async (event) => {
 };
 
 export const list = ApiHandler(async (_evt) => {
-  const record = await db.selectFrom("user").select("first_name").execute();
+  const record = await db.selectFrom("user").selectAll().execute();
 
   return {
     statusCode: 200,
@@ -84,11 +84,23 @@ export const get = ApiHandler(async (event) => {
   };
 });
 
-export const findByLastName = ApiHandler(async (_evt) => {
-  const record = await db.selectFrom("user").select("first_name").execute();
+export const withLastName = ApiHandler(async (event) => {
+  const last_name = event.pathParameters?.last_name || "";
+  if (last_name) {
+    const record = await db
+      .selectFrom("user")
+      .selectAll()
+      .where("last_name", "=", last_name)
+      .execute();
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(record),
+    };
+  }
 
   return {
-    statusCode: 200,
-    body: JSON.stringify(record),
+    statusCode: 400,
+    body: "Invalid last name",
   };
 });
