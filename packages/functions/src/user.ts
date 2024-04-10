@@ -2,8 +2,8 @@ import { z } from "zod";
 
 const User = z.object({
   email: z.string().email(),
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
+  first_name: z.string().min(1),
+  last_name: z.string().min(1),
 });
 
 export const isValidUser = (data: any): boolean => {

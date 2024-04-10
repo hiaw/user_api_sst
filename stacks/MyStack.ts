@@ -19,9 +19,11 @@ export function API({ stack }: StackContext) {
       },
     },
     routes: {
-      "GET /users": "packages/functions/src/user.list",
-      "POST /user": "packages/functions/src/user.create",
-      // "GET /user/{id}": "packages/functions/src/user.get",
+      "POST /user": "packages/functions/src/handler.create",
+      "GET /users": "packages/functions/src/handler.list",
+      "GET /user/{id}": "packages/functions/src/handler.get",
+      "GET /user/last-name/{lastname}":
+        "packages/functions/src/handler.findByLastName",
     },
   });
 

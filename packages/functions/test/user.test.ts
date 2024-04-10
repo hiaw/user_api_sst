@@ -2,22 +2,22 @@ import { isValidUser } from "../src/user";
 import { describe, expect, test } from "vitest";
 
 describe("Is valid user", () => {
-  const firstName = "John";
-  const lastName = "Doe";
+  const first_name = "John";
+  const last_name = "Doe";
   const email = "john@doe.com";
 
   test("valid input", () => {
-    expect(isValidUser({ email, firstName, lastName })).toBeTruthy();
+    expect(isValidUser({ email, first_name, last_name })).toBeTruthy();
   });
 
   test("invalid email format", () => {
-    expect(isValidUser({ email: "abc@a", firstName, lastName })).toBeFalsy();
-    expect(isValidUser({ email: "abc", firstName, lastName })).toBeFalsy();
-    expect(isValidUser({ email: "@z.com", firstName, lastName })).toBeFalsy();
+    expect(isValidUser({ email: "abc@a", first_name, last_name })).toBeFalsy();
+    expect(isValidUser({ email: "abc", first_name, last_name })).toBeFalsy();
+    expect(isValidUser({ email: "@z.com", first_name, last_name })).toBeFalsy();
   });
 
   test("empty names", () => {
-    expect(isValidUser({ email, firstName: "", lastName })).toBeFalsy();
-    expect(isValidUser({ email, firstName, lastName: "" })).toBeFalsy();
+    expect(isValidUser({ email, first_name: "", last_name })).toBeFalsy();
+    expect(isValidUser({ email, first_name, last_name: "" })).toBeFalsy();
   });
 });

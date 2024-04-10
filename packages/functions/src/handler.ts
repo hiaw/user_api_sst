@@ -10,9 +10,10 @@ import { isValidUser } from "./user";
 
 interface Database {
   user: {
+    id?: number;
     email: string;
-    firstName: string;
-    lastName: string;
+    first_name: string;
+    last_name: string;
   };
 }
 
@@ -29,16 +30,16 @@ const db = new Kysely<Database>({
 });
 
 export const create: APIGatewayProxyHandlerV2 = async (event) => {
-  const { email, firstName, lastName } = JSON.parse(event.body || "");
-  if (isValidUser({ email, firstName, lastName })) {
+  const { email, first_name, last_name } = JSON.parse(event.body || "");
+  if (isValidUser({ email, first_name, last_name })) {
     const record = await db
       .insertInto("user")
-      .values({ email, firstName, lastName })
+      .values({ email, first_name, last_name })
       .executeTakeFirst();
     if (record) {
       return {
         statusCode: 200,
-        body: `Successfully created user ${firstName} ${lastName}`,
+        body: `Successfully created user ${first_name} ${last_name}`,
       };
     }
     return {
@@ -54,7 +55,37 @@ export const create: APIGatewayProxyHandlerV2 = async (event) => {
 };
 
 export const list = ApiHandler(async (_evt) => {
-  const record = await db.selectFrom("user").select("firstName").execute();
+  const record = await db.selectFrom("user").select("first_name").execute();
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify(record),
+  };
+});
+
+export const get = ApiHandler(async (event) => {
+  const id = parseInt(event.pathParameters?.id || "");
+  if (id) {
+    const record = await db
+      .selectFrom("user")
+      .selectAll()
+      .where("id", "=", id)
+      .execute();
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(record),
+    };
+  }
+
+  return {
+    statusCode: 400,
+    body: "Invalid ID",
+  };
+});
+
+export const findByLastName = ApiHandler(async (_evt) => {
+  const record = await db.selectFrom("user").select("first_name").execute();
 
   return {
     statusCode: 200,
