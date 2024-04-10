@@ -7,8 +7,5 @@
   "license": "ISC",
   "scripts": {
     "createMigration": "node ./scripts/createMigration.js"
-  },
-  "dependencies": {
-    "kysely": "^0.27.3"
   }
 }

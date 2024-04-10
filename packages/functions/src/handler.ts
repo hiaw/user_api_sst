@@ -1,41 +1,35 @@
 import { ApiHandler } from "sst/node/api";
+import { drizzle } from "drizzle-orm/aws-data-api/pg";
 
-import { RDSData } from "@aws-sdk/client-rds-data";
-import { Kysely } from "kysely";
-import { DataApiDialect } from "kysely-data-api";
+import { RDSDataClient } from "@aws-sdk/client-rds-data";
 import { RDS } from "sst/node/rds";
 import { APIGatewayProxyHandlerV2 } from "aws-lambda";
 
 import { isValidUser } from "./user";
+import { pgTable, serial, text } from "drizzle-orm/pg-core";
+import { eq, ilike } from "drizzle-orm";
 
-interface Database {
-  user: {
-    id?: number;
-    email: string;
-    first_name: string;
-    last_name: string;
-  };
-}
+export const users = pgTable("user", {
+  id: serial("id").primaryKey(),
+  email: text("email").notNull(),
+  firstName: text("first_name").notNull(),
+  lastName: text("last_name").notNull(),
+});
 
-const db = new Kysely<Database>({
-  dialect: new DataApiDialect({
-    mode: "postgres",
-    driver: {
-      database: RDS.database.defaultDatabaseName,
-      secretArn: RDS.database.secretArn,
-      resourceArn: RDS.database.clusterArn,
-      client: new RDSData({}),
-    },
-  }),
+const rdsClient = new RDSDataClient();
+const db2 = drizzle(rdsClient, {
+  database: RDS.database.defaultDatabaseName,
+  secretArn: RDS.database.secretArn,
+  resourceArn: RDS.database.clusterArn,
 });
 
 export const create: APIGatewayProxyHandlerV2 = async (event) => {
   const { email, first_name, last_name } = JSON.parse(event.body || "");
   if (isValidUser({ email, first_name, last_name })) {
-    const record = await db
-      .insertInto("user")
-      .values({ email, first_name, last_name })
-      .executeTakeFirst();
+    const record = await db2
+      .insert(users)
+      .values({ email, firstName: first_name, lastName: last_name });
+
     if (record) {
       return {
         statusCode: 200,
@@ -55,7 +49,7 @@ export const create: APIGatewayProxyHandlerV2 = async (event) => {
 };
 
 export const list = ApiHandler(async (_evt) => {
-  const record = await db.selectFrom("user").selectAll().execute();
+  const record = await db2.select().from(users);
 
   return {
     statusCode: 200,
@@ -66,11 +60,7 @@ export const list = ApiHandler(async (_evt) => {
 export const get = ApiHandler(async (event) => {
   const id = parseInt(event.pathParameters?.id || "");
   if (id) {
-    const record = await db
-      .selectFrom("user")
-      .selectAll()
-      .where("id", "=", id)
-      .execute();
+    const record = await db2.select().from(users).where(eq(users.id, id));
 
     return {
       statusCode: 200,
@@ -87,11 +77,10 @@ export const get = ApiHandler(async (event) => {
 export const withLastName = ApiHandler(async (event) => {
   const last_name = event.pathParameters?.last_name || "";
   if (last_name) {
-    const record = await db
-      .selectFrom("user")
-      .selectAll()
-      .where("last_name", "=", last_name)
-      .execute();
+    const record = await db2
+      .select()
+      .from(users)
+      .where(ilike(users.lastName, `%${last_name}%`));
 
     return {
       statusCode: 200,
