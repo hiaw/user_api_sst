@@ -3,8 +3,8 @@ export async function up(db) {
     .createTable("user")
     .addColumn("id", "serial", (col) => col.primaryKey())
     .addColumn("email", "varchar", (col) => col.notNull())
-    .addColumn("firstname", "varchar", (col) => col.notNull())
-    .addColumn("lastname", "varchar", (col) => col.notNull())
+    .addColumn("first_name", "varchar", (col) => col.notNull())
+    .addColumn("last_name", "varchar", (col) => col.notNull())
     .execute();
 }
 

@@ -6,11 +6,13 @@ import { DataApiDialect } from "kysely-data-api";
 import { RDS } from "sst/node/rds";
 import { APIGatewayProxyHandlerV2 } from "aws-lambda";
 
+import { isValidUser } from "./user";
+
 interface Database {
   user: {
     email: string;
-    firstname: string;
-    lastname: string;
+    firstName: string;
+    lastName: string;
   };
 }
 
@@ -27,16 +29,16 @@ const db = new Kysely<Database>({
 });
 
 export const create: APIGatewayProxyHandlerV2 = async (event) => {
-  const { email, firstname, lastname } = JSON.parse(event.body || "");
-  if (email && firstname && lastname) {
+  const { email, firstName, lastName } = JSON.parse(event.body || "");
+  if (isValidUser({ email, firstName, lastName })) {
     const record = await db
       .insertInto("user")
-      .values({ email: "abc@abc.com", firstname: "Abc", lastname: "What" })
+      .values({ email, firstName, lastName })
       .executeTakeFirst();
     if (record) {
       return {
         statusCode: 200,
-        body: `Successfully created user ${firstname} ${lastname}`,
+        body: `Successfully created user ${firstName} ${lastName}`,
       };
     }
     return {
@@ -52,7 +54,7 @@ export const create: APIGatewayProxyHandlerV2 = async (event) => {
 };
 
 export const list = ApiHandler(async (_evt) => {
-  const record = await db.selectFrom("user").select("firstname").execute();
+  const record = await db.selectFrom("user").select("firstName").execute();
 
   return {
     statusCode: 200,

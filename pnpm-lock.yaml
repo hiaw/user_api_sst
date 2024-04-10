@@ -23,6 +23,9 @@ importers:
       typescript:
         specifier: ^5.4.4
         version: 5.4.4
+      vitest:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.12.5)
 
   packages/core:
     dependencies:
@@ -51,6 +54,9 @@ importers:
       kysely-data-api:
         specifier: ^0.2.1
         version: 0.2.1(@aws-sdk/client-rds-data@3.549.0)(kysely@0.27.3)
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
     devDependencies:
       '@types/aws-lambda':
         specifier: ^8.10.137
